@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Dot-Net\\College\\AssignmentPerson\\PersonApp\\PersonApp.csproj": {}
+    "D:\\Dot-Net\\College\\AssignmentPerson\\personapp\\PersonApp.csproj": {}
   },
   "projects": {
-    "D:\\Dot-Net\\College\\AssignmentPerson\\PersonApp\\PersonApp.csproj": {
+    "D:\\Dot-Net\\College\\AssignmentPerson\\personapp\\PersonApp.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Dot-Net\\College\\AssignmentPerson\\PersonApp\\PersonApp.csproj",
+        "projectUniqueName": "D:\\Dot-Net\\College\\AssignmentPerson\\personapp\\PersonApp.csproj",
         "projectName": "PersonApp",
-        "projectPath": "D:\\Dot-Net\\College\\AssignmentPerson\\PersonApp\\PersonApp.csproj",
+        "projectPath": "D:\\Dot-Net\\College\\AssignmentPerson\\personapp\\PersonApp.csproj",
         "packagesPath": "C:\\Users\\Dell\\.nuget\\packages\\",
-        "outputPath": "D:\\Dot-Net\\College\\AssignmentPerson\\PersonApp\\obj\\",
+        "outputPath": "D:\\Dot-Net\\College\\AssignmentPerson\\personapp\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -50,6 +50,10 @@
         "net9.0-windows7.0": {
           "targetAlias": "net9.0-windows",
           "dependencies": {
+            "Microsoft.Data.SqlClient": {
+              "target": "Package",
+              "version": "[6.1.1, )"
+            },
             "System.Data.SqlClient": {
               "target": "Package",
               "version": "[4.9.0, )"

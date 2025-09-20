@@ -62,7 +62,8 @@ namespace PersonApp.core.services
             return all.Where(p =>
                 p.FullName.Contains(keyword, StringComparison.OrdinalIgnoreCase) ||
                 p.Email.Contains(keyword, StringComparison.OrdinalIgnoreCase) ||
-                p.Phone.Contains(keyword, StringComparison.OrdinalIgnoreCase)
+                p.Phone.Contains(keyword, StringComparison.OrdinalIgnoreCase)  || 
+                  p.Address.Contains(keyword, StringComparison.OrdinalIgnoreCase) 
             ).ToList();
         }
 

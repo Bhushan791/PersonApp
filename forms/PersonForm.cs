@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using PersonApp.core.services;
 using PersonApp.core.models;
+using System.Runtime.InteropServices;
 
 namespace PersonApp.forms
 {
@@ -27,10 +28,12 @@ namespace PersonApp.forms
         public PersonForm(PersonService service, Person? existingPerson = null)
         {
             Text = "Person Form";
-            Width = 400;
-            Height = 350;
+            Width = 420;
+            Height = 380;
             FormBorderStyle = FormBorderStyle.FixedDialog;
             StartPosition = FormStartPosition.CenterParent;
+            BackColor = Color.FromArgb(245, 245, 245); // warm light gray
+            Font = new Font("Segoe UI", 10);
 
             personService = service;
             person = existingPerson;
@@ -43,46 +46,85 @@ namespace PersonApp.forms
 
         private void InitializeComponents()
         {
-            int labelX = 20, textBoxX = 120, topY = 20, spacingY = 40, textBoxWidth = 220;
+            int labelX = 20, textBoxX = 140, topY = 30, spacingY = 50, textBoxWidth = 220;
 
-            // Labels
-            fullNameLabel = new Label { Text = "Full Name:", Left = labelX, Top = topY, Width = 100 };
-            addressLabel = new Label { Text = "Address:", Left = labelX, Top = topY + spacingY, Width = 100 };
-            emailLabel = new Label { Text = "Email:", Left = labelX, Top = topY + spacingY * 2, Width = 100 };
-            phoneLabel = new Label { Text = "Phone:", Left = labelX, Top = topY + spacingY * 3, Width = 100 };
+            // ---------- Labels ----------
+            fullNameLabel = CreateLabel("Full Name:", labelX, topY);
+            addressLabel = CreateLabel("Address:", labelX, topY + spacingY);
+            emailLabel = CreateLabel("Email:", labelX, topY + spacingY * 2);
+            phoneLabel = CreateLabel("Phone:", labelX, topY + spacingY * 3);
 
-            // TextBoxes
-            fullNameTextBox = new TextBox { Left = textBoxX, Top = topY, Width = textBoxWidth };
-            addressTextBox = new TextBox { Left = textBoxX, Top = topY + spacingY, Width = textBoxWidth };
-            emailTextBox = new TextBox { Left = textBoxX, Top = topY + spacingY * 2, Width = textBoxWidth };
-            phoneTextBox = new TextBox { Left = textBoxX, Top = topY + spacingY * 3, Width = textBoxWidth };
+            // ---------- TextBoxes ----------
+            fullNameTextBox = CreateTextBox(textBoxX, topY, textBoxWidth);
+            addressTextBox = CreateTextBox(textBoxX, topY + spacingY, textBoxWidth);
+            emailTextBox = CreateTextBox(textBoxX, topY + spacingY * 2, textBoxWidth);
+            phoneTextBox = CreateTextBox(textBoxX, topY + spacingY * 3, textBoxWidth);
 
-            // Buttons
-            saveButton = new Button
-            {
-                Text = "Save",
-                Width = 100,
-                Left = 80,
-                Top = topY + spacingY * 4 + 10
-            };
-            cancelButton = new Button
-            {
-                Text = "Cancel",
-                Width = 100,
-                Left = 200,
-                Top = topY + spacingY * 4 + 10
-            };
+            // ---------- Buttons ----------
+            int buttonTop = topY + spacingY * 4 + 10;
+            saveButton = CreateButton("Save", 80, buttonTop, 100, Color.FromArgb(0, 123, 255));
+            cancelButton = CreateButton("Cancel", 220, buttonTop, 100, Color.FromArgb(220, 53, 69));
 
             saveButton.Click += SaveButton_Click;
             cancelButton.Click += (s, e) => Close();
 
-            // Add controls
+            // ---------- Add Controls ----------
             Controls.AddRange(new Control[]
             {
                 fullNameLabel, addressLabel, emailLabel, phoneLabel,
                 fullNameTextBox, addressTextBox, emailTextBox, phoneTextBox,
                 saveButton, cancelButton
             });
+        }
+
+        private Label CreateLabel(string text, int left, int top)
+        {
+            return new Label
+            {
+                Text = text,
+                Left = left,
+                Top = top,
+                Width = 100,
+                ForeColor = Color.FromArgb(50, 50, 50)
+            };
+        }
+
+        private TextBox CreateTextBox(int left, int top, int width)
+        {
+            return new TextBox
+            {
+                Left = left,
+                Top = top,
+                Width = width,
+                BackColor = Color.White,
+                ForeColor = Color.Black,
+                BorderStyle = BorderStyle.FixedSingle
+            };
+        }
+
+        private Button CreateButton(string text, int left, int top, int width, Color color)
+        {
+            Button btn = new Button
+            {
+                Text = text,
+                Left = left,
+                Top = top,
+                Width = width,
+                Height = 40,
+                BackColor = color,
+                ForeColor = Color.White,
+                FlatStyle = FlatStyle.Flat,
+                Font = new Font("Segoe UI", 10, FontStyle.Bold),
+                Cursor = Cursors.Hand
+            };
+            btn.FlatAppearance.BorderSize = 0;
+            btn.FlatAppearance.MouseOverBackColor = ControlPaint.Light(color);
+            btn.FlatAppearance.MouseDownBackColor = ControlPaint.Dark(color);
+
+            // Rounded corners
+            btn.Region = Region.FromHrgn(CreateRoundRectRgn(0, 0, btn.Width, btn.Height, 15, 15));
+
+            return btn;
         }
 
         private void LoadPersonData()
@@ -95,32 +137,35 @@ namespace PersonApp.forms
             phoneTextBox.Text = person.Phone;
         }
 
-private void SaveButton_Click(object sender, EventArgs e)
-{
-    if (person == null)
-        person = new Person();
+        private void SaveButton_Click(object sender, EventArgs e)
+        {
+            if (person == null)
+                person = new Person();
 
-    person.FullName = fullNameTextBox.Text;
-    person.Address = addressTextBox.Text;
-    person.Email = emailTextBox.Text;
-    person.Phone = phoneTextBox.Text;
+            person.FullName = fullNameTextBox.Text;
+            person.Address = addressTextBox.Text;
+            person.Email = emailTextBox.Text;
+            person.Phone = phoneTextBox.Text;
 
-    // Use the new Validate tuple
-    var (isValid, errorMsg) = personService.Validate(person);
+            var (isValid, errorMsg) = personService.Validate(person);
+            if (!isValid)
+            {
+                MessageBox.Show(errorMsg, "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
 
-    if (!isValid)
-    {
-        MessageBox.Show(errorMsg, "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-        return; // stop saving
-    }
+            if (person.Id == 0)
+                personService.AddPerson(person);
+            else
+                personService.UpdatePerson(person);
 
-    if (person.Id == 0)
-        personService.AddPerson(person);
-    else
-        personService.UpdatePerson(person);
+            Close();
+        }
 
-    Close();
-}
-
+        // ---------------------- P/Invoke for Rounded Buttons ----------------------
+        [DllImport("Gdi32.dll", EntryPoint = "CreateRoundRectRgn")]
+        private static extern IntPtr CreateRoundRectRgn(
+            int nLeftRect, int nTopRect, int nRightRect, int nBottomRect,
+            int nWidthEllipse, int nHeightEllipse);
     }
 }

@@ -6,17 +6,22 @@ namespace PersonApp
 {
     static class Program
     {
-        /// <summary>
-        ///  The main entry point for the application.
-        /// </summary>
-        [STAThread]
-        static void Main()
-        {
-            // Initialize application configuration (DPI, fonts, etc.)
-            ApplicationConfiguration.Initialize();
-
-            // Run your MainForm as the startup form
-            Application.Run(new MainForm());
-        }
+       
+[STAThread]
+static void Main()
+{
+    try
+    {
+        ApplicationConfiguration.Initialize();
+        Application.Run(new MainForm());
+    }
+    catch (Exception ex)
+    {
+        MessageBox.Show(ex.ToString(), "Startup Error");
     }
 }
+
+    }
+}
+
+

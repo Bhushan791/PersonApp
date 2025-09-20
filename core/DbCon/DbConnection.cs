@@ -1,6 +1,9 @@
 using System;
 using System.Data;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
+
+
+
 
 namespace PersonApp.core.DbCon
 {
@@ -50,9 +53,11 @@ namespace PersonApp.core.DbCon
                     Id INT IDENTITY(1,1) PRIMARY KEY,
                     FullName NVARCHAR(100) NOT NULL,
                     Address NVARCHAR(200),
-                    Email NVARCHAR(100) NOT NULL,
-                    Phone NVARCHAR(20) NOT NULL
+                    Email NVARCHAR(100) NOT NULL,   
+                    Phone NVARCHAR(20) NOT NULL 
                 );";
+
+                //unique needed here
 
                 using (var cmd = new SqlCommand(cmdText, connection))
                 {

@@ -13,6 +13,9 @@ namespace PersonApp.core.models
         public override string ToString()
         {
             return $"{FullName} - {Email} - {Phone}";
+
         }
+
+        
     }
 }

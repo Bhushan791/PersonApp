@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
+
+
 using PersonApp.core.models;
 using PersonApp.core.interfaces;
 using PersonApp.core.DbCon;
@@ -33,6 +35,8 @@ namespace PersonApp.core.repositories
                     cmd.ExecuteNonQuery();
                 }
             }
+
+            
         }
 
         public void Update(Person person)
